@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Smart — Gram-Negative Bacteria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#101B2A;
+    --ink-2:#182740;
+    --paper:#F3EEE2;
+    --paper-dim:#E4DBC7;
+    --violet:#5C3A8C;
+    --violet-soft:#8467B0;
+    --safranin:#C23B33;
+    --safranin-soft:#DE6E63;
+    --amber:#D79A44;
+    --teal:#2F6F6A;
+    --text-on-paper:#241C13;
+    --text-soft:#5B5342;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 15% 0%, rgba(92,58,140,0.35), transparent 55%),
+      radial-gradient(circle at 85% 10%, rgba(194,59,51,0.28), transparent 50%),
+      var(--ink);
+    color:var(--paper);
+    font-family:'IBM Plex Sans', sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--safranin);color:#fff;}
+
+  a{color:inherit;}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 20px 80px;}
+
+  /* ---------- HEADER ---------- */
+  header{
+    display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:flex-end;
+    border-bottom:1px solid rgba(243,238,226,0.16);
+    padding-bottom:22px;margin-bottom:26px;
+  }
+  .brand-eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--amber);margin:0 0 6px;
+  }
+  h1.title{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:clamp(34px,6vw,54px);
+    line-height:1.0;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  h1.title em{
+    font-style:normal;
+    color:var(--safranin-soft);
+  }
+  .subtitle{
+    font-size:14.5px;color:#C9C2AE;max-width:420px;margin-top:8px;line-height:1.5;
+  }
+  .stain-key{
+    display:flex;gap:14px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#C9C2AE;
+  }
+  .stain-key span{display:flex;align-items:center;gap:6px;}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+  .dot.violet{background:var(--violet-soft);}
+  .dot.safranin{background:var(--safranin-soft);}
+
+  /* ---------- NAV / SLIDE TABS ---------- */
+  nav.tabs{
+    display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px;
+  }
+  .tab-btn{
+    position:relative;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;letter-spacing:.03em;
+    background:rgba(243,238,226,0.06);
+    border:1px solid rgba(243,238,226,0.16);
+    color:#D8D2C0;
+    padding:11px 16px 11px 14px;
+    border-radius:999px;
+    cursor:pointer;
+    display:flex;align-items:center;gap:9px;
+    transition:background .25s ease, border-color .25s ease, color .25s ease, transform .15s ease;
+  }
+  .tab-btn:hover{transform:translateY(-1px);border-color:rgba(243,238,226,0.4);}
+  .tab-btn .slide-dot{
+    width:10px;height:10px;border-radius:50%;
+    background:var(--violet-soft);
+    transition:background .4s ease, box-shadow .4s ease;
+  }
+  .tab-btn.active{
+    background:var(--paper);color:var(--text-on-paper);border-color:var(--paper);
+    font-weight:600;
+  }
+  .tab-btn.active .slide-dot{
+    background:var(--safranin);
+    box-shadow:0 0 0 3px rgba(194,59,51,0.18);
+  }
+
+  /* ---------- PANELS ---------- */
+  .panel{display:none;animation:fadeUp .35s ease;}
+  .panel.active{display:block;}
+  @keyframes fadeUp{
+    from{opacity:0;transform:translateY(8px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+
+  .card{
+    background:var(--paper);
+    color:var(--text-on-paper);
+    border-radius:var(--radius);
+    padding:22px 24px;
+  }
+  .section-head{
+    display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:16px;flex-wrap:wrap;
+  }
+  .section-head h2{
+    font-family:'Fraunces',serif;font-size:26px;margin:0;font-weight:700;
+  }
+  .section-tag{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--text-soft);
+  }
+
+  /* ===================== OVERVIEW ===================== */
+  .overview-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:6px;
+  }
+  .ov-card{
+    background:#fff;border:1px solid var(--paper-dim);border-radius:12px;padding:16px 18px;
+  }
+  .ov-card h3{
+    font-family:'Fraunces',serif;font-size:16.5px;margin:0 0 10px;color:var(--violet);
+    display:flex;align-items:center;gap:8px;
+  }
+  .ov-card h3::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--safranin);display:inline-block;}
+  .ov-card ul{margin:0;padding-left:18px;font-size:13.6px;line-height:1.55;color:var(--text-on-paper);}
+  .ov-card ul li{margin-bottom:6px;}
+  .tape-strip{
+    margin-top:18px;background:var(--ink);color:var(--paper);border-radius:10px;
+    padding:14px 18px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;
+    display:flex;flex-wrap:wrap;gap:10px 22px;
+  }
+  .tape-strip b{color:var(--amber);}
+
+  /* ===================== DIAGRAMS ===================== */
+  .diagram-block{
+    background:#fff;border:1px solid var(--paper-dim);border-radius:12px;padding:18px 20px;margin-bottom:18px;
+  }
+  .diagram-block h3{font-family:'Fraunces',serif;font-size:17px;margin:0 0 4px;}
+  .diagram-block p.help{font-size:12.5px;color:var(--text-soft);margin:0 0 14px;}
+
+  /* wall comparator */
+  .wall-comparator{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .wall-col h4{font-family:'IBM Plex Mono',monospace;font-size:11.5px;text-transform:uppercase;letter-spacing:.1em;margin:0 0 8px;color:var(--text-soft);}
+  .wall{border:1px solid var(--paper-dim);border-radius:8px;overflow:hidden;}
+  .layer{
+    padding:9px 10px;font-size:12px;font-weight:500;text-align:center;
+    border-bottom:1px solid rgba(0,0,0,0.06);color:#3a3226;
+    transition:filter .2s ease, transform .2s ease;
+    cursor:pointer;
+  }
+  .layer:last-child{border-bottom:none;}
+  .layer.dim{opacity:.35;}
+  .layer.lit{filter:saturate(1.4);transform:scale(1.015);box-shadow:inset 0 0 0 2px rgba(0,0,0,0.15);}
+  .layer-pg{background:#F1D9A6;}
+  .layer-om{background:#F0B7B0;}
+  .layer-peri{background:#CDEAE6;}
+  .layer-im{background:#D8CDEB;}
+  .layer-teichoic{background:#E9C6D8;}
+  .layer-braun{background:#c9dcb0;}
+  .layer-absent{background:#eee;color:#999;font-style:italic;}
+
+  .chip-row{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 14px;}
+  .chip{
+    font-family:'IBM Plex Mono',monospace;font-size:11.8px;padding:7px 12px;border-radius:999px;
+    border:1px solid var(--paper-dim);background:#faf7f0;cursor:pointer;color:#3a3226;
+    transition:all .2s ease;
+  }
+  .chip:hover{border-color:var(--violet);}
+  .chip.active{background:var(--violet);color:#fff;border-color:var(--violet);}
+  .caption-box{
+    background:#F8F4EA;border-left:3px solid var(--safranin);border-radius:6px;
+    padding:12px 14px;font-size:13px;line-height:1.55;color:#3a3226;min-height:44px;
+  }
+
+  /* LPS bar */
+  .lps-bar{display:flex;border-radius:8px;overflow:hidden;border:1px solid var(--paper-dim);margin-bottom:12px;height:56px;}
+  .lps-seg{flex:1;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:600;cursor:pointer;transition:transform .2s ease, filter .2s ease;color:#fff;}
+  .lps-seg:hover{filter:brightness(1.08);}
+  .lps-seg.active{transform:scaleY(1.08);box-shadow:inset 0 0 0 3px rgba(255,255,255,0.5);}
+  .seg-o{background:var(--teal);flex:1.3;}
+  .seg-core{background:var(--amber);flex:1;}
+  .seg-lipid{background:var(--safranin);flex:0.9;}
+
+  /* site cards */
+  .site-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px;}
+  .site-card{
+    border:1px solid var(--paper-dim);border-radius:10px;padding:12px;text-align:center;cursor:pointer;background:#faf7f0;
+    transition:all .2s ease;
+  }
+  .site-card:hover{border-color:var(--safranin);}
+  .site-card.active{background:var(--safranin);color:#fff;border-color:var(--safranin);}
+  .site-card .site-name{font-weight:600;font-size:13px;}
+
+  /* comparison grid */
+  table.cmp{width:100%;border-collapse:collapse;font-size:13px;}
+  table.cmp th{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+    text-align:left;padding:9px 10px;border-bottom:2px solid var(--ink);color:var(--text-on-paper);
+  }
+  table.cmp td{padding:10px;border-bottom:1px solid var(--paper-dim);vertical-align:top;}
+  table.cmp tr.row-clickable{cursor:pointer;}
+  table.cmp tr.row-clickable:hover td{background:#faf3e5;}
+  table.cmp tr.row-open td{background:#F3E9D3;}
+  .row-note{display:none;font-size:12.3px;color:var(--text-soft);padding-top:6px;}
+  tr.row-open .row-note{display:block;}
+
+  /* ===================== MINI MAP ===================== */
+  .minimap{display:grid;grid-template-columns:260px 1fr;gap:16px;}
+  @media (max-width:720px){.minimap{grid-template-columns:1fr;}}
+  .mm-list{display:flex;flex-direction:column;gap:6px;}
+  .mm-item{
+    text-align:left;background:#fff;border:1px solid var(--paper-dim);border-radius:8px;
+    padding:10px 12px;font-size:13px;cursor:pointer;color:var(--text-on-paper);
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    transition:all .18s ease;
+  }
+  .mm-item:hover{border-color:var(--violet);}
+  .mm-item.active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+  .mm-item .num{font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:.6;}
+  .mm-detail{
+    background:#fff;border:1px solid var(--paper-dim);border-radius:10px;padding:20px 22px;min-height:320px;
+  }
+  .mm-detail h3{font-family:'Fraunces',serif;font-size:20px;margin:0 0 10px;color:var(--violet);}
+  .mm-detail p, .mm-detail li{font-size:14px;line-height:1.65;color:var(--text-on-paper);}
+  .mm-placeholder{color:var(--text-soft);font-size:13.5px;font-style:italic;}
+
+  /* ===================== FLASHCARDS ===================== */
+  .fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
+  .fc{
+    perspective:1200px;height:150px;cursor:pointer;
+  }
+  .fc-inner{
+    position:relative;width:100%;height:100%;transition:transform .5s cubic-bezier(.4,.2,.2,1);
+    transform-style:preserve-3d;
+  }
+  .fc.flipped .fc-inner{transform:rotateY(180deg);}
+  .fc-face{
+    position:absolute;inset:0;backface-visibility:hidden;border-radius:10px;
+    padding:14px;display:flex;align-items:center;justify-content:center;text-align:center;
+    font-size:13.5px;line-height:1.4;
+  }
+  .fc-front{background:#fff;border:1px solid var(--paper-dim);color:var(--text-on-paper);font-weight:600;font-family:'Fraunces',serif;font-size:16px;}
+  .fc-back{background:var(--violet);color:#fff;transform:rotateY(180deg);font-size:12.8px;}
+  .fc-tag{position:absolute;top:8px;left:10px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;opacity:.5;}
+
+  /* ===================== QUIZ ===================== */
+  .quiz-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
+  .score-pill{
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;background:var(--ink);color:var(--paper);
+    padding:8px 14px;border-radius:999px;
+  }
+  .reset-btn{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;background:transparent;border:1px solid var(--text-soft);
+    color:var(--text-on-paper);padding:8px 14px;border-radius:999px;cursor:pointer;
+  }
+  .reset-btn:hover{border-color:var(--safranin);color:var(--safranin);}
+  .q-block{
+    background:#fff;border:1px solid var(--paper-dim);border-radius:10px;padding:15px 16px;margin-bottom:12px;
+  }
+  .q-num{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-soft);}
+  .q-text{font-size:14.3px;font-weight:600;margin:4px 0 10px;color:var(--text-on-paper);}
+  .opt{
+    display:block;width:100%;text-align:left;background:#faf7f0;border:1px solid var(--paper-dim);
+    border-radius:7px;padding:9px 12px;margin-bottom:7px;font-size:13.3px;cursor:pointer;color:var(--text-on-paper);
+    transition:all .15s ease;
+  }
+  .opt:hover{border-color:var(--violet);}
+  .opt.correct{background:#DCEEDC;border-color:#4B8A4B;color:#245524;font-weight:600;}
+  .opt.wrong{background:#F5D9D6;border-color:var(--safranin);color:#7A2620;}
+  .opt[disabled]{cursor:default;}
+
+  /* ===================== FOOTER ===================== */
+  footer{
+    margin-top:46px;padding-top:18px;border-top:1px solid rgba(243,238,226,0.16);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9C93A6;
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <p class="brand-eyebrow">Medical Microbiology · Lecture 6 companion</p>
+      <h1 class="title">Study <em>Smart</em></h1>
+      <p class="subtitle">A revision workspace for gram-negative bacteria and the Enterobacteriaceae — built around what's actually testable, not the whole lecture.</p>
+    </div>
+    <div class="stain-key">
+      <span><span class="dot violet"></span> Crystal violet</span>
+      <span><span class="dot safranin"></span> Safranin counterstain</span>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="overview"><span class="slide-dot"></span> Overview</button>
+    <button class="tab-btn" data-tab="diagrams"><span class="slide-dot"></span> Diagrams</button>
+    <button class="tab-btn" data-tab="minimap"><span class="slide-dot"></span> Mini Map</button>
+    <button class="tab-btn" data-tab="flashcards"><span class="slide-dot"></span> Flash Cards</button>
+    <button class="tab-btn" data-tab="quiz"><span class="slide-dot"></span> Quiz Bank</button>
+  </nav>
+
+  <!-- ============ OVERVIEW ============ -->
+  <section class="panel active" id="overview">
+    <div class="card">
+      <div class="section-head">
+        <h2>Overview</h2>
+        <span class="section-tag">Key laws, not the whole lecture</span>
+      </div>
+
+      <div class="overview-grid">
+        <div class="ov-card">
+          <h3>Gram-negative architecture</h3>
+          <ul>
+            <li>Inner (cytoplasmic) membrane + <b>thin</b> peptidoglycan + outer membrane.</li>
+            <li>Periplasm: gel-filled space between the two membranes.</li>
+            <li>Outer membrane carries LPS: Lipid A – Core polysaccharide – O antigen.</li>
+            <li>No teichoic / lipoteichoic acids.</li>
+            <li>Braun's lipoprotein covalently links outer membrane ↔ peptidoglycan.</li>
+            <li>Almost none form spores.</li>
+          </ul>
+        </div>
+        <div class="ov-card">
+          <h3>Why it matters clinically</h3>
+          <ul>
+            <li>Outer membrane blocks penicillin, detergents, and lysozyme.</li>
+            <li>Lysed bacteria release <b>Lipid A</b> → endotoxin effect.</li>
+            <li>Result: hypotension, respiratory failure, low O₂ delivery, lactic acidosis → <b>septic shock</b>.</li>
+          </ul>
+        </div>
+        <div class="ov-card">
+          <h3>Enterobacteriaceae family traits</h3>
+          <ul>
+            <li>Gram-negative, facultative anaerobic, rod-shaped.</li>
+            <li>Ferment sugars → lactic acid + other products.</li>
+            <li>Mostly motile (flagella); a few genera are non-motile.</li>
+            <li>Fimbriae mediate adhesion to host tissue.</li>
+            <li>Found in gut, mouth, nose, skin, soil, water.</li>
+          </ul>
+        </div>
+        <div class="ov-card">
+          <h3>Three genera, one exam</h3>
+          <ul>
+            <li><b>Klebsiella</b> — encapsulated, nosocomial, pneumonia/UTI/meningitis/sepsis.</li>
+            <li><b>E. coli</b> — normal flora that turns pathogenic via 6 diarrheal pathotypes, UTIs, neonatal meningitis.</li>
+            <li><b>Citrobacter</b> — citrate-user, C. freundii carries inducible ampC resistance.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tape-strip">
+        <span><b>Klebsiella:</b> oxidase-negative</span>
+        <span><b>K antigens:</b> 77 serotypes</span>
+        <span><b>O157:H7:</b> Shiga toxin / bioterrorism agent</span>
+        <span><b>E. coli meningitis:</b> babies &lt;3 months</span>
+        <span><b>C. freundii:</b> inducible ampC → ampicillin + 1st-gen cephalosporin resistance</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DIAGRAMS ============ -->
+  <section class="panel" id="diagrams">
+    <div class="card">
+      <div class="section-head">
+        <h2>Interactive Diagrams</h2>
+        <span class="section-tag">Click to explore</span>
+      </div>
+
+      <div class="diagram-block">
+        <h3>Cell-envelope comparator</h3>
+        <p class="help">Click a layer name to light it up on both walls.</p>
+        <div class="chip-row" id="wallChips"></div>
+        <div class="wall-comparator">
+          <div class="wall-col">
+            <h4>Gram (+) wall</h4>
+            <div class="wall" id="wallPos"></div>
+          </div>
+          <div class="wall-col">
+            <h4>Gram (−) wall</h4>
+            <div class="wall" id="wallNeg"></div>
+          </div>
+        </div>
+        <div class="caption-box" id="wallCaption" style="margin-top:12px;">Select a layer above to see what it does.</div>
+      </div>
+
+      <div class="diagram-block">
+        <h3>LPS explorer</h3>
+        <p class="help">Click a segment of the lipopolysaccharide molecule.</p>
+        <div class="lps-bar" id="lpsBar"></div>
+        <div class="caption-box" id="lpsCaption">Select a segment above.</div>
+      </div>
+
+      <div class="diagram-block">
+        <h3>Klebsiella pneumoniae — infection sites</h3>
+        <p class="help">Click a body site to see what happens there.</p>
+        <div class="site-grid" id="siteGrid"></div>
+        <div class="caption-box" id="siteCaption">Select a site above.</div>
+      </div>
+
+      <div class="diagram-block">
+        <h3>E. coli pathotype selector</h3>
+        <p class="help">Six pathotypes cause diarrheal disease — click one.</p>
+        <div class="chip-row" id="pathoChips"></div>
+        <div class="caption-box" id="pathoCaption">Select a pathotype above.</div>
+      </div>
+
+      <div class="diagram-block">
+        <h3>Genus comparison grid</h3>
+        <p class="help">Click a row to expand its exam-relevant note.</p>
+        <table class="cmp" id="cmpTable"></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MINI MAP ============ -->
+  <section class="panel" id="minimap">
+    <div class="card">
+      <div class="section-head">
+        <h2>Mini Map</h2>
+        <span class="section-tag">Click a title, read it here</span>
+      </div>
+      <div class="minimap">
+        <div class="mm-list" id="mmList"></div>
+        <div class="mm-detail" id="mmDetail">
+          <p class="mm-placeholder">Pick a topic from the list to display it here.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FLASHCARDS ============ -->
+  <section class="panel" id="flashcards">
+    <div class="card">
+      <div class="section-head">
+        <h2>Flash Cards</h2>
+        <span class="section-tag">Tap a card to flip it</span>
+      </div>
+      <div class="fc-grid" id="fcGrid"></div>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section class="panel" id="quiz">
+    <div class="card">
+      <div class="section-head">
+        <h2>Quiz Bank</h2>
+        <span class="section-tag" id="quizCount"></span>
+      </div>
+      <div class="quiz-head">
+        <span class="score-pill" id="scorePill">Score: 0 / 0</span>
+        <button class="reset-btn" id="resetQuizBtn">Reshuffle &amp; reset</button>
+      </div>
+      <div id="quizList"></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Study Smart · Enterobacteriaceae edition</span>
+    <span>© Anmar Taha. All rights reserved.</span>
+  </footer>
+</div>
+
+<script>
+/* ---------------- TAB SWITCHING ---------------- */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* =========================================================
+   DIAGRAM 1 — WALL COMPARATOR
+   ========================================================= */
+const wallLayers = [
+  {key:'om',  label:'Outer membrane / LPS', pos:'layer-om',  info:'Present only in gram-negative bacteria. Embeds LPS (Lipid A, core, O antigen) and porins; blocks penicillin, detergents and lysozyme.'},
+  {key:'pg',  label:'Peptidoglycan', pos:'layer-pg', info:'Thick in gram-positive, thin in gram-negative. Provides structural rigidity to the cell wall.'},
+  {key:'peri',label:'Periplasm', pos:'layer-peri', info:'Gel-like space between outer and inner membrane — found in gram-negative bacteria, holding periplasmic enzymes.'},
+  {key:'im',  label:'Inner (cytoplasmic) membrane', pos:'layer-im', info:'Present in both gram types; in gram-negative cells it sits beneath the periplasm and thin peptidoglycan.'},
+  {key:'teichoic', label:'Teichoic / lipoteichoic acid', pos:'layer-teichoic', info:'Found only in gram-positive walls, threaded through the thick peptidoglycan. Absent in gram-negative bacteria.'},
+  {key:'braun', label:"Braun's lipoprotein", pos:'layer-braun', info:"Covalently links the outer membrane to peptidoglycan — a gram-negative-only feature."}
+];
+
+const wallPosHTML = {
+  om:null, // not in gram+
+  pg:'<div class="layer layer-pg" data-key="pg">Peptidoglycan (thick, multilayered)</div>',
+  peri:'<div class="layer layer-peri" data-key="peri" style="display:none">Periplasm</div>',
+  im:'<div class="layer layer-im" data-key="im">Plasma membrane</div>',
+  teichoic:'<div class="layer layer-teichoic" data-key="teichoic">Teichoic / lipoteichoic acid (woven through wall)</div>',
+  braun:null
+};
+
+function buildWalls(){
+  // Gram(+) wall: Teichoic acid layer, Peptidoglycan, Plasma membrane
+  document.getElementById('wallPos').innerHTML = `
+    <div class="layer layer-teichoic" data-key="teichoic">Teichoic / lipoteichoic acid</div>
+    <div class="layer layer-pg" data-key="pg">Peptidoglycan (thick)</div>
+    <div class="layer layer-im" data-key="im">Plasma membrane</div>
+    <div class="layer layer-absent" data-key="om">— no outer membrane —</div>
+    <div class="layer layer-absent" data-key="braun">— no Braun's lipoprotein —</div>
+  `;
+  // Gram(-) wall
+  document.getElementById('wallNeg').innerHTML = `
+    <div class="layer layer-om" data-key="om">Outer membrane (LPS)</div>
+    <div class="layer layer-braun" data-key="braun">Braun's lipoprotein</div>
+    <div class="layer layer-pg" data-key="pg">Peptidoglycan (thin)</div>
+    <div class="layer layer-peri" data-key="peri">Periplasm</div>
+    <div class="layer layer-im" data-key="im">Plasma membrane</div>
+    <div class="layer layer-absent" data-key="teichoic">— no teichoic acid —</div>
+  `;
+}
+buildWalls();
+
+const wallChipRow = document.getElementById('wallChips');
+wallLayers.forEach(l=>{
+  const c = document.createElement('button');
+  c.className='chip';
+  c.textContent=l.label;
+  c.addEventListener('click',()=>{
+    document.querySelectorAll('#wallChips .chip').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');
+    document.querySelectorAll('.layer[data-key]').forEach(el=>{
+      el.classList.remove('lit','dim');
+      if(el.dataset.key===l.key){ el.classList.add('lit'); }
+      else{ el.classList.add('dim'); }
+    });
+    document.getElementById('wallCaption').textContent = l.info;
+  });
+  wallChipRow.appendChild(c);
+});
+
+/* =========================================================
+   DIAGRAM 2 — LPS EXPLORER
+   ========================================================= */
+const lpsParts = [
+  {key:'o', label:'O antigen', cls:'seg-o', info:'Outermost, highly variable polysaccharide chain. Used for serotyping (e.g. E. coli O157) and is exposed to the immune system.'},
+  {key:'core', label:'Core polysaccharide', cls:'seg-core', info:'Connects the O antigen to Lipid A; relatively conserved structure that anchors the outer sugar chain.'},
+  {key:'lipid', label:'Lipid A', cls:'seg-lipid', info:'The toxic, membrane-anchored component — the actual "endotoxin." Its release upon bacterial lysis can trigger septic shock: low blood pressure, respiratory failure, lactic acidosis.'}
+];
+const lpsBar = document.getElementById('lpsBar');
+lpsParts.forEach(p=>{
+  const seg=document.createElement('div');
+  seg.className='lps-seg '+p.cls;
+  seg.textContent=p.label;
+  seg.addEventListener('click',()=>{
+    document.querySelectorAll('.lps-seg').forEach(s=>s.classList.remove('active'));
+    seg.classList.add('active');
+    document.getElementById('lpsCaption').textContent=p.info;
+  });
+  lpsBar.appendChild(seg);
+});
+
+/* =========================================================
+   DIAGRAM 3 — KLEBSIELLA INFECTION SITES
+   ========================================================= */
+const sites = [
+  {name:'Lungs', info:'Pneumonia with destructive changes to alveoli — thick, mucoid, bloody or brownish "currant-jelly" sputum; can progress to necrosis and abscess, with fever, chills and cough.'},
+  {name:'Bloodstream', info:'Bacteremia and sepsis — fever, chills, fatigue, light-headedness, and altered mental state.'},
+  {name:'Meninges', info:'Meningitis — fever, confusion, neck stiffness, sensitivity to bright light.'},
+  {name:'Urinary tract', info:'Urinary tract infection — one of the common presentations once Klebsiella pneumoniae leaves the intestine.'}
+];
+const siteGrid = document.getElementById('siteGrid');
+sites.forEach(s=>{
+  const el=document.createElement('div');
+  el.className='site-card';
+  el.innerHTML=`<div class="site-name">${s.name}</div>`;
+  el.addEventListener('click',()=>{
+    document.querySelectorAll('.site-card').forEach(c=>c.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('siteCaption').textContent=s.info;
+  });
+  siteGrid.appendChild(el);
+});
+
+/* =========================================================
+   DIAGRAM 4 — E. COLI PATHOTYPES
+   ========================================================= */
+const pathotypes = [
+  {abbr:'EPEC', name:'Enteropathogenic E. coli', info:'One of the six diarrheal pathotypes; adheres to intestinal mucosa and disrupts normal absorption.'},
+  {abbr:'EHEC', name:'Enterohaemorrhagic E. coli', info:'Causes bloody diarrhea via Shiga-like toxins; includes serotype O157:H7, a classified bioterrorism agent.'},
+  {abbr:'ETEC', name:'Enterotoxigenic E. coli', info:"Classic cause of traveler's diarrhea; secretes enterotoxins leading to watery diarrhea."},
+  {abbr:'EAEC', name:'Enteroaggregative E. coli', info:'Adheres to intestinal mucosa in an "aggregative" stacked-brick pattern; one of the six recognized diarrheal pathotypes.'},
+  {abbr:'EIEC', name:'Enteroinvasive E. coli', info:'Invades intestinal epithelial cells, producing a dysentery-like illness among the six diarrheal pathotypes.'},
+  {abbr:'DAEC', name:'Diffusely adherent E. coli', info:'Adheres diffusely across the surface of intestinal cells; one of the six recognized diarrheal pathotypes.'}
+];
+const pathoChipRow = document.getElementById('pathoChips');
+pathotypes.forEach(p=>{
+  const c=document.createElement('button');
+  c.className='chip';
+  c.textContent=p.abbr;
+  c.addEventListener('click',()=>{
+    document.querySelectorAll('#pathoChips .chip').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');
+    document.getElementById('pathoCaption').innerHTML=`<b>${p.name}</b> — ${p.info}`;
+  });
+  pathoChipRow.appendChild(c);
+});
+
+/* =========================================================
+   DIAGRAM 5 — GENUS COMPARISON GRID
+   ========================================================= */
+const cmpRows = [
+  {trait:'Oxidase test', k:'Negative', e:'Negative (typical Enterobacteriaceae)', c:'Negative', note:'Oxidase-negative is a shared family trait used to separate Enterobacteriaceae from oxidase-positive gram-negatives like Pseudomonas.'},
+  {trait:'Capsule', k:'Large polysaccharide capsule (mucoid colonies)', e:'Usually absent / not prominent', c:'Not emphasized', note:"Klebsiella's thick capsule is central to its virulence and its mucoid colony appearance."},
+  {trait:'Key virulence factor', k:'CPS + LPS + capsular (K) antigens', e:'Pathotype-specific toxins (e.g. Shiga toxin)', c:'ampC-mediated resistance genes', note:'Each genus is tested differently: Klebsiella on capsule/virulence, E. coli on toxin-driven pathotypes, Citrobacter on antibiotic resistance genes.'},
+  {trait:'Classic disease link', k:'Pneumonia, UTI, meningitis, bacteremia', e:'Diarrhea, UTI, neonatal meningitis', c:'GI/urinary infection, infant meningitis & sepsis (rare)', note:'Klebsiella pneumoniae and E. coli overlap on UTI and meningitis, which is a common point of confusion in exams.'},
+  {trait:'Nosocomial importance', k:'Very high — major hospital-acquired pathogen', e:'Moderate (device- and catheter-associated)', c:'Present but less emphasized', note:'Klebsiella is explicitly highlighted in the lecture as important in nosocomial infections.'}
+];
+const cmpTable = document.getElementById('cmpTable');
+cmpTable.innerHTML = `<thead><tr><th>Trait</th><th>Klebsiella</th><th>E. coli</th><th>Citrobacter</th></tr></thead>`;
+const tbody = document.createElement('tbody');
+cmpRows.forEach(r=>{
+  const tr=document.createElement('tr');
+  tr.className='row-clickable';
+  tr.innerHTML = `
+    <td><b>${r.trait}</b><div class="row-note">${r.note}</div></td>
+    <td>${r.k}</td>
+    <td>${r.e}</td>
+    <td>${r.c}</td>
+  `;
+  tr.addEventListener('click',()=>tr.classList.toggle('row-open'));
+  tbody.appendChild(tr);
+});
+cmpTable.appendChild(tbody);
+
+/* =========================================================
+   MINI MAP
+   ========================================================= */
+const mmTopics = [
+  {title:'Gram-negative characteristics', body:`<h3>Gram-negative characteristics</h3>
+    <ul>
+      <li>Inner (cytoplasmic) membrane present.</li>
+      <li>Thin peptidoglycan layer (thicker in gram-positive).</li>
+      <li>Outer membrane contains LPS: Lipid A, core polysaccharide, O antigen; phospholipids sit in the inner leaflet.</li>
+      <li>Periplasm fills the gap between outer and inner membranes.</li>
+      <li>No teichoic or lipoteichoic acids.</li>
+      <li>Some carry Braun's lipoprotein, covalently linking outer membrane to peptidoglycan.</li>
+      <li>Most do not form spores.</li>
+    </ul>`},
+  {title:'Outer membrane defenses', body:`<h3>Outer membrane defenses</h3>
+    <p>The outer membrane protects gram-negative bacteria from:</p>
+    <ul>
+      <li>Many antibiotics, including penicillin.</li>
+      <li>Detergents that would otherwise damage the inner membrane.</li>
+      <li>Lysozyme, an antimicrobial enzyme of the innate immune system.</li>
+    </ul>`},
+  {title:'LPS & septic shock', body:`<h3>LPS & septic shock</h3>
+    <p>The outer membrane's LPS has a Lipid A component that triggers a toxic reaction when bacteria are lysed by immune cells.</p>
+    <p>This reaction leads to low blood pressure, respiratory failure, reduced oxygen delivery, and lactic acidosis — a life-threatening condition known as <b>septic shock</b>.</p>`},
+  {title:'Enterobacteriaceae overview', body:`<h3>Enterobacteriaceae overview</h3>
+    <p>A large family including many common pathogens such as Klebsiella spp. and E. coli. Gram-negative, non-spore-forming, rod-shaped, facultative anaerobic bacteria that ferment sugars to lactic acid and other products.</p>
+    <p>Most have flagella for motility (a few genera are non-motile) and fimbriae for adhesion to host tissue. Found in the large intestine, mouth, nose, skin, soil, and water.</p>`},
+  {title:'Klebsiella pneumoniae', body:`<h3>Klebsiella pneumoniae</h3>
+    <p>The most medically important Klebsiella species. Its large polysaccharide capsule gives mucoid colonies and resists host defenses.</p>
+    <p>Normally lives harmlessly in the intestine; outside the gut it can cause pneumonia, bloodstream infection, meningitis, and UTIs — mostly in hospital settings.</p>
+    <p><b>Pneumonia:</b> destructive alveolar changes, thick bloody "currant-jelly" sputum, possible necrosis/abscess, fever, chills, cough.<br>
+    <b>Meningitis:</b> fever, confusion, neck stiffness, photophobia.<br>
+    <b>Bacteremia/sepsis:</b> fever, chills, fatigue, light-headedness, altered mental state.</p>
+    <p><b>Transmission:</b> not airborne — spreads via direct person-to-person contact or contaminated medical equipment (ventilators, IV catheters).</p>
+    <p><b>Diagnosis:</b> culture of blood, urine, or sputum; imaging such as chest X-ray/CT.</p>
+    <p><b>Treatment:</b> guided by sensitivity testing — hospital isolates are often multi-drug resistant.</p>`},
+  {title:'Klebsiella ozaenae & granulomatis', body:`<h3>Klebsiella ozaenae &amp; K. granulomatis</h3>
+    <p><b>K. ozaenae</b> causes ozena, a primary atrophic rhinitis with chronic nasal inflammation.</p>
+    <p><b>K. granulomatis</b> causes granuloma inguinale, a chronic ulcerative disease.</p>`},
+  {title:'Klebsiella virulence factors', body:`<h3>Klebsiella virulence factors</h3>
+    <ul>
+      <li><b>LPS</b> (Lipid A, core, O antigen) resists complement-mediated killing.</li>
+      <li><b>CPS</b> is the outer layer that resists phagocytosis and lowers C3 deposition, blocking macrophage receptor contact.</li>
+      <li><b>Capsular (K) antigens</b>: complex acidic polysaccharides, ~77 serotypes, largely made of uronic acids — essential to virulence.</li>
+      <li>The bacterium evades phagocytosis by polymorphonuclear granulocytes via thick fibrillous structures and inhibits complement component C3b, which normally opsonizes pathogens.</li>
+    </ul>`},
+  {title:'E. coli overview', body:`<h3>E. coli overview</h3>
+    <p>Gram-negative, facultative anaerobic, rod-shaped organism that colonizes the mucous layer of the colon as normal flora. Most strains are harmless and even beneficial — producing vitamin K2 and preventing colonization by pathogenic bacteria.</p>
+    <p>Virulent strains (pathotypes) can cause gastroenteritis, UTIs, neonatal meningitis, and hemorrhagic colitis, with symptoms such as abdominal cramps, diarrhea, vomiting, and fever.</p>`},
+  {title:'E. coli pathotypes', body:`<h3>E. coli pathotypes</h3>
+    <p>Three clinical syndrome groups:</p>
+    <ol>
+      <li><b>Enteric / diarrheal disease</b> — six pathotypes: EPEC, EHEC (bloody diarrhea via Shiga-like toxins), ETEC (traveler's diarrhea), EAEC, EIEC, DAEC. Transmitted via contaminated food/water; bacteria adhere to intestinal mucosa and secrete enterotoxins.</li>
+      <li><b>Urinary tract infections (UTIs)</b> — the most common extra-intestinal E. coli infection, caused by uropathogenic E. coli (UPEC).</li>
+      <li><b>Neonatal meningitis</b> — mostly in newborns or infants under 3 months; premature/low-birth-weight babies are at higher risk.</li>
+    </ol>
+    <p><b>O157:H7</b> produces Shiga toxin (a classified bioterrorism agent), causing inflammatory gut lesions, bloody diarrhea, and premature red blood cell destruction that can block kidney filtration.</p>`},
+  {title:'E. coli transmission & diagnosis', body:`<h3>E. coli transmission &amp; diagnosis</h3>
+    <p><b>Transmission:</b> fecal–oral route is the major pathway for pathogenic strains.</p>
+    <p><b>Diagnosis:</b> stool culture with antibiotic sensitivity testing.</p>
+    <p><b>Treatment:</b> mainly fluid/electrolyte replacement for dehydration; antibiotics can shorten illness duration.</p>`},
+  {title:'Citrobacter spp.', body:`<h3>Citrobacter spp.</h3>
+    <p>Gram-negative coliform genus in the Enterobacteriaceae family. C. koseri and C. freundii can use citrate as a sole carbon source.</p>
+    <p>Differentiated by tryptophan-to-indole conversion (C. koseri is indole-positive) and lactose fermentation (C. koseri ferments lactose).</p>
+    <p>Normally found in the human intestine; rarely pathogenic, but virulent strains can cause GI, urinary tract, and infant meningitis/sepsis infections.</p>
+    <p>C. freundii carries inducible ampC genes conferring resistance to ampicillin and first-generation cephalosporins; some isolates carry plasmid-encoded resistance to additional antibiotics.</p>`}
+];
+const mmList = document.getElementById('mmList');
+const mmDetail = document.getElementById('mmDetail');
+mmTopics.forEach((t,i)=>{
+  const item=document.createElement('button');
+  item.className='mm-item';
+  item.innerHTML = `<span>${t.title}</span><span class="num">0${i+1}</span>`;
+  item.addEventListener('click',()=>{
+    document.querySelectorAll('.mm-item').forEach(x=>x.classList.remove('active'));
+    item.classList.add('active');
+    mmDetail.innerHTML = t.body;
+  });
+  mmList.appendChild(item);
+});
+
+/* =========================================================
+   FLASHCARDS
+   ========================================================= */
+const flashcards = [
+  {tag:'Structure', front:'Periplasm', back:'The gel-like substance filling the space between the outer and inner membranes of gram-negative bacteria.'},
+  {tag:'Structure', front:"Braun's lipoprotein", back:'Covalently links the outer membrane to the peptidoglycan chain.'},
+  {tag:'Structure', front:'LPS components', back:'Lipid A + core polysaccharide + O antigen.'},
+  {tag:'Toxin', front:'Lipid A', back:'The toxic LPS component; its release on bacterial lysis can trigger septic shock.'},
+  {tag:'Structure', front:'Fimbriae', back:'Hair-like structures most Enterobacteriaceae use to adhere to host cells.'},
+  {tag:'Family', front:'Enterobacteriaceae — core traits', back:'Gram-negative, facultative anaerobic, rod-shaped, ferment sugars to lactic acid, mostly motile, no spores.'},
+  {tag:'Klebsiella', front:'Klebsiella pneumoniae', back:'Encapsulated, mucoid colonies; causes pneumonia, UTI, meningitis, bacteremia — a major nosocomial pathogen.'},
+  {tag:'Klebsiella', front:'Currant-jelly sputum', back:'Thick, bloody, mucoid sputum — a hallmark sign of Klebsiella pneumonia.'},
+  {tag:'Klebsiella', front:'Klebsiella ozaenae', back:'Causes ozena — primary atrophic rhinitis with chronic nasal inflammation.'},
+  {tag:'Klebsiella', front:'Klebsiella granulomatis', back:'Causes granuloma inguinale, a chronic ulcerative disease.'},
+  {tag:'Virulence', front:'CPS (capsular polysaccharide)', back:'Resists phagocytosis; lowers C3 deposition on the bacterial surface.'},
+  {tag:'Immunology', front:'Complement C3', back:'Essential immune protein that opsonizes pathogens to guide phagocytosis.'},
+  {tag:'Virulence', front:'Capsular (K) antigens', back:'~77 serological types, largely uronic-acid based; essential to Klebsiella virulence.'},
+  {tag:'E. coli', front:'E. coli — normal role', back:'Produces vitamin K2 and helps prevent colonization by pathogenic bacteria.'},
+  {tag:'E. coli', front:'EHEC', back:'Enterohaemorrhagic E. coli — produces Shiga-like toxins, causes bloody diarrhea.'},
+  {tag:'E. coli', front:'ETEC', back:"Enterotoxigenic E. coli — classic cause of traveler's diarrhea."},
+  {tag:'E. coli', front:'O157:H7', back:'EHEC serotype producing Shiga toxin; classified as a bioterrorism agent.'},
+  {tag:'E. coli', front:'UPEC', back:'Uropathogenic E. coli — the main cause of E. coli urinary tract infections.'},
+  {tag:'Transmission', front:'Fecal–oral route', back:'The major transmission pathway for pathogenic E. coli strains.'},
+  {tag:'Citrobacter', front:'Citrobacter koseri', back:'Indole-positive, lactose-fermenting Citrobacter species.'},
+  {tag:'Citrobacter', front:'Citrobacter freundii', back:'Carries inducible ampC genes, giving resistance to ampicillin and first-generation cephalosporins.'},
+  {tag:'Klebsiella', front:'Oxidase test result', back:'Klebsiella is oxidase-negative.'},
+  {tag:'Structure', front:'Outer membrane role', back:'Shields gram-negative bacteria from antibiotics, detergents, and lysozyme.'},
+  {tag:'Toxin', front:'Septic shock', back:'Life-threatening state from LPS Lipid A release: low blood pressure, respiratory failure, lactic acidosis.'}
+];
+const fcGrid = document.getElementById('fcGrid');
+flashcards.forEach(fc=>{
+  const card=document.createElement('div');
+  card.className='fc';
+  card.innerHTML = `
+    <div class="fc-inner">
+      <div class="fc-face fc-front"><span class="fc-tag">${fc.tag}</span>${fc.front}</div>
+      <div class="fc-face fc-back">${fc.back}</div>
+    </div>`;
+  card.addEventListener('click',()=>card.classList.toggle('flipped'));
+  fcGrid.appendChild(card);
+});
+
+/* =========================================================
+   QUIZ BANK — 30+ MCQ, answer position randomized on render
+   ========================================================= */
+const quizData = [
+  {q:"Which layer is thinner in gram-negative bacteria compared to gram-positive bacteria?", correct:"Peptidoglycan layer", wrong:["Outer membrane","Capsule","Cytoplasmic membrane"]},
+  {q:"What is the gel-like substance found between the outer and inner membranes of gram-negative bacteria?", correct:"Periplasm", wrong:["Cytoplasm","Mesosome","Nucleoid"]},
+  {q:"Which structure links the outer membrane to peptidoglycan via a covalent bond?", correct:"Braun's lipoprotein", wrong:["Porin","Fimbriae","Flagellin"]},
+  {q:"LPS is composed of which three components?", correct:"Lipid A, core polysaccharide, and O antigen", wrong:["Peptidoglycan, teichoic acid, and lipoteichoic acid","Capsule, flagella, and pili","Porin, lipoprotein, and phospholipid"]},
+  {q:"Which component of LPS is mainly responsible for triggering septic shock?", correct:"Lipid A", wrong:["O antigen","Core polysaccharide","Braun's lipoprotein"]},
+  {q:"Which of the following is NOT a consequence of the toxic reaction caused by LPS release?", correct:"Increased blood pressure", wrong:["Low blood pressure","Respiratory failure","Lactic acidosis"]},
+  {q:"The outer membrane of gram-negative bacteria protects against all of the following EXCEPT:", correct:"Osmotic lysis in hypotonic solutions", wrong:["Penicillin and other antibiotics","Detergents","Lysozyme"]},
+  {q:"Teichoic acids and lipoteichoic acids are:", correct:"Absent in gram-negative bacteria", wrong:["Present in gram-negative bacteria","Found only in the outer membrane","Part of the LPS structure"]},
+  {q:"Which family includes both E. coli and Klebsiella spp.?", correct:"Enterobacteriaceae", wrong:["Pseudomonadaceae","Bacillaceae","Chlamydiaceae"]},
+  {q:"Enterobacteriaceae are generally described as:", correct:"Gram-negative, facultative anaerobic, rod-shaped", wrong:["Gram-positive, obligate aerobic, cocci-shaped","Gram-negative, obligate anaerobic, spiral-shaped","Gram-variable, facultative anaerobic, cocci-shaped"]},
+  {q:"What structures do most members of Enterobacteriaceae use for adhesion to host cells?", correct:"Fimbriae", wrong:["Flagella","Capsule","Endospores"]},
+  {q:"Klebsiella species have become especially important as a cause of:", correct:"Nosocomial (hospital-acquired) infections", wrong:["Foodborne outbreaks only","Waterborne epidemics only","Airborne pandemics"]},
+  {q:"Klebsiella is best described biochemically as:", correct:"Gram-negative, oxidase-negative, rod-shaped with a polysaccharide capsule", wrong:["Gram-positive, oxidase-positive, cocci-shaped","Gram-negative, catalase-negative, spore-forming","Gram-variable, oxidase-negative, motile only"]},
+  {q:"Which Klebsiella species causes ozena, a form of atrophic rhinitis?", correct:"Klebsiella ozaenae", wrong:["Klebsiella pneumoniae","Klebsiella granulomatis","Klebsiella oxytoca"]},
+  {q:"Which Klebsiella species causes granuloma inguinale, a chronic ulcerative disease?", correct:"Klebsiella granulomatis", wrong:["Klebsiella ozaenae","Klebsiella pneumoniae","Citrobacter freundii"]},
+  {q:"The mucoid appearance of Klebsiella pneumoniae colonies is due to:", correct:"A large polysaccharide capsule", wrong:["Flagella production","Spore formation","Lipoteichoic acid"]},
+  {q:'"Currant-jelly sputum" is a classic clinical sign associated with:', correct:"Klebsiella pneumoniae pneumonia", wrong:["E. coli urinary tract infection","Citrobacter meningitis","Klebsiella ozaenae"]},
+  {q:"Which of the following is NOT a typical site of Klebsiella pneumoniae infection described in the lecture?", correct:"Skin only, with no systemic spread", wrong:["Respiratory tract (pneumonia)","Meninges (meningitis)","Bloodstream (bacteremia/sepsis)"]},
+  {q:"How is Klebsiella pneumoniae primarily transmitted?", correct:"Direct person-to-person contact and contaminated medical equipment", wrong:["Airborne droplets","Insect vectors","Sexual contact only"]},
+  {q:"Diagnosis of Klebsiella pneumoniae infection typically relies on:", correct:"Culture of infected tissue plus imaging such as chest X-ray", wrong:["Skin biopsy only","Stool culture exclusively","Serology alone"]},
+  {q:"What is the main function of capsular polysaccharide (CPS) as a virulence factor?", correct:"Resistance against phagocytosis", wrong:["Toxin production","Motility","Nutrient uptake"]},
+  {q:"How does CPS interfere with the complement system?", correct:"It reduces the amount of C3 deposited on the bacterial surface", wrong:["It increases C3 deposition","It destroys complement proteins directly","It has no effect on complement"]},
+  {q:"How many serological types of Klebsiella capsular (K) antigens have been described?", correct:"77", wrong:["7","157","25"]},
+  {q:"Klebsiella capsular antigens are primarily composed of:", correct:"Uronic acids", wrong:["Amino sugars only","Teichoic acid","Phospholipids"]},
+  {q:"Which beneficial function can normal, harmless E. coli strains provide to the host?", correct:"Producing vitamin K2 and preventing colonization by pathogens", wrong:["Producing insulin","Digesting cellulose","Synthesizing hemoglobin"]},
+  {q:"Which E. coli pathotype is well known for causing traveler's diarrhea?", correct:"Enterotoxigenic E. coli (ETEC)", wrong:["Enteropathogenic E. coli (EPEC)","Enteroinvasive E. coli (EIEC)","Uropathogenic E. coli (UPEC)"]},
+  {q:"Which E. coli pathotype produces Shiga-like toxins and causes bloody diarrhea?", correct:"Enterohaemorrhagic E. coli (EHEC)", wrong:["Enteroaggregative E. coli (EAEC)","Diffusely adherent E. coli (DAEC)","Enteroinvasive E. coli (EIEC)"]},
+  {q:"E. coli O157:H7 is classified as a bioterrorism agent because it produces:", correct:"Shiga toxin", wrong:["Botulinum toxin","Diphtheria toxin","Cholera toxin"]},
+  {q:"The premature destruction of red blood cells and kidney complications seen in STEC infection mainly result from:", correct:"Shiga toxin damaging cells and blocking renal filtration", wrong:["Direct bacterial invasion of the kidney","An autoimmune reaction to the bacterial capsule","Lipid A acting alone"]},
+  {q:"Which E. coli pathotype is the major cause of urinary tract infections?", correct:"Uropathogenic E. coli (UPEC)", wrong:["ETEC","EHEC","EAEC"]},
+  {q:"E. coli meningitis occurs most commonly in which population?", correct:"Newborns and infants under 3 months of age", wrong:["Elderly adults","Pregnant women","School-age children"]},
+  {q:"What is the major route of transmission for pathogenic E. coli strains?", correct:"Fecal–oral transmission", wrong:["Airborne transmission","Vector-borne transmission","Vertical transmission only"]},
+  {q:"Diagnosis of E. coli infectious diarrhea is typically performed using:", correct:"Stool culture with antibiotic sensitivity testing", wrong:["Blood culture only","Chest X-ray","Skin scraping"]},
+  {q:"Citrobacter species can use which compound as a sole carbon source?", correct:"Citrate", wrong:["Lactose exclusively","Glucose exclusively","Urea"]},
+  {q:"Which Citrobacter species is typically indole-positive?", correct:"Citrobacter koseri", wrong:["Citrobacter freundii","Klebsiella pneumoniae","Klebsiella ozaenae"]},
+  {q:"Citrobacter freundii carries inducible genes that confer resistance to:", correct:"Ampicillin and first-generation cephalosporins", wrong:["Vancomycin","Aminoglycosides only","Antifungal agents"]}
+];
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+let score = 0, answered = 0;
+
+function updateScorePill(){
+  document.getElementById('scorePill').textContent = `Score: ${score} / ${answered}`;
+}
+
+function renderQuiz(){
+  score = 0; answered = 0;
+  updateScorePill();
+  document.getElementById('quizCount').textContent = quizData.length + ' questions';
+  const list = document.getElementById('quizList');
+  list.innerHTML = '';
+  quizData.forEach((item, idx)=>{
+    const options = shuffle([item.correct, ...item.wrong]);
+    const block = document.createElement('div');
+    block.className='q-block';
+    block.innerHTML = `<div class="q-num">Question ${idx+1}</div><div class="q-text">${item.q}</div>`;
+    options.forEach(optText=>{
+      const btn = document.createElement('button');
+      btn.className='opt';
+      btn.textContent = optText;
+      btn.addEventListener('click',()=>{
+        const allOpts = block.querySelectorAll('.opt');
+        allOpts.forEach(o=>o.setAttribute('disabled','true'));
+        if(optText === item.correct){
+          btn.classList.add('correct');
+          score++;
+        } else {
+          btn.classList.add('wrong');
+          allOpts.forEach(o=>{ if(o.textContent===item.correct) o.classList.add('correct'); });
+        }
+        answered++;
+        updateScorePill();
+      });
+      block.appendChild(btn);
+    });
+    list.appendChild(block);
+  });
+}
+renderQuiz();
+document.getElementById('resetQuizBtn').addEventListener('click', renderQuiz);
+</script>
+</body>
+</html>
